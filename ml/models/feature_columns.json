@@ -1,0 +1,17 @@
+[
+  "avg_monthly_rent",
+  "avg_income",
+  "employment_rate",
+  "unemployment_rate",
+  "traffic_volume",
+  "congestion_delay_minutes",
+  "ber_avg_score",
+  "est_annual_energy_cost",
+  "rental_yield",
+  "affordability_index",
+  "rent_to_income_pct",
+  "commute_cost_monthly",
+  "true_cost_index",
+  "energy_tax",
+  "commute_to_rent_ratio"
+]

@@ -493,5 +493,11 @@ RISK_THRESHOLDS = {"Low": (0, 33), "Medium": (34, 66), "High": (67, 100)}
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 OPENAI_MODEL = "gpt-4o-mini"
 
+# ── Gemini Settings ────────────────────────────────────────────
+from dotenv import load_dotenv as _ld
+_ld(override=True)
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+GEMINI_MODEL = "gemini-2.5-flash"
+
 # ── Forecasting Settings ──────────────────────────────────────
 FORECAST_PERIODS = 6  # months ahead

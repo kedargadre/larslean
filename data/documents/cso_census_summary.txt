@@ -1,0 +1,39 @@
+Census of Population 2022 — Summary Results for Community Intelligence
+
+Population Overview:
+- Ireland's population reached 5.15 million in Census 2022, up 8% from 2016.
+- Dublin remains the most populated county with 1.46 million residents.
+- The fastest-growing counties were Meath (+12.6%), Kildare (+11.6%), and Longford (+10.9%).
+- Rural depopulation continues in parts of the West and Northwest, particularly Leitrim and Roscommon.
+
+Employment & Income:
+- National employment rate: 69.2% of working-age population (15-64).
+- Dublin has the highest employment rate at 76.1%, followed by Kildare (74.2%) and Wicklow (73.4%).
+- Lowest employment rates: Donegal (60.3%), Leitrim (60.8%), and Longford (61.2%).
+- Average annual household income: €55,000 in Dublin, €31,000 in Leitrim.
+- The tech sector accounts for 12% of Dublin employment, concentrated in the Docklands and Sandyford.
+
+Commuting Patterns:
+- 1.2 million workers commute daily, with average commute time of 28.2 minutes nationally.
+- Dublin commuters face the longest average commute: 34 minutes.
+- 68% of commuters drive alone; only 12% use public transport nationally.
+- Remote working: 32% of workers reported working from home at least one day per week, up from 7% in 2016.
+- Counties with highest remote work rates: Leitrim (41%), Roscommon (38%), Galway (36%).
+
+Housing Tenure:
+- 66% of households are owner-occupied (down from 70% in 2016).
+- 18% are private renters (up from 15% in 2016).
+- 9% are in social housing.
+- Average household size: 2.75 persons nationally.
+- Dublin has the highest proportion of renters at 29%.
+
+Age Demographics:
+- Median age: 38.8 years nationally.
+- Youngest county: Meath (median 35.2 years).
+- Oldest county: Roscommon (median 42.1 years).
+- 28% of the population is under 18; 15% is over 65.
+
+Education:
+- 45% of adults (25-64) hold a third-level qualification, highest in the EU.
+- Dublin (52%), Galway (48%), and Kildare (47%) have the most educated populations.
+- Counties with lowest third-level attainment: Donegal (32%), Cavan (33%), Longford (34%).

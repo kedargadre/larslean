@@ -1,0 +1,44 @@
+TII National Roads & Transport Infrastructure Report 2024
+
+Traffic Volume Overview:
+- Ireland's national road network carries 38 billion vehicle-kilometres annually.
+- The M50 (Dublin orbital motorway) is the busiest road, with 140,000+ vehicles per day.
+- Traffic volumes have recovered to 104% of pre-COVID levels nationally.
+- Dublin accounts for 35% of all national traffic despite having 29% of the population.
+
+Congestion Analysis by County:
+- Dublin: average peak-hour delay of 28 minutes. Worst corridors: M50 southbound, N7 Naas Road, N11 Stillorgan.
+- Cork: 18 minutes average delay. Jack Lynch Tunnel and Dunkettle Interchange are primary bottlenecks.
+- Galway: 15 minutes. The absence of a city ring road forces all traffic through the city centre.
+- Limerick: 14 minutes. The Limerick Tunnel has reduced congestion significantly since opening.
+- Rural counties (Leitrim, Roscommon, Longford): 4-6 minutes average delay. Minimal congestion.
+
+Major Infrastructure Projects:
+- DART+ Programme: Expanding Dublin's electrified rail network from 50km to 150km. Serving Drogheda, Maynooth, Celbridge, and Bray. Completion: 2028.
+- MetroLink: 19km underground metro from Swords to Charlemont (Dublin). Completion: 2035.
+- BusConnects Dublin: Complete redesign of Dublin's bus network with 230km of dedicated bus corridors. Rollout: 2024-2028.
+- Galway City Ring Road (N6): 18km orbital route to relieve city centre congestion. Under planning.
+- Cork Metropolitan Area Transport Strategy (CMATS): Light rail, BRT, and cycling infrastructure. 2024-2040.
+- M20 Cork-Limerick Motorway: Direct motorway link between Ireland's 2nd and 3rd cities. Under planning.
+
+Public Transport Usage:
+- Dublin: 45% of city-centre workers use public transport (bus, rail, Luas).
+- Cork: 12% public transport mode share.
+- Galway: 8% public transport mode share.
+- Rural Ireland: <3% public transport usage. Car dependency is near-total.
+
+Commuting Cost Estimates:
+- Average Irish commuter spends €4,500-6,000 per year on transport (fuel, insurance, tolls, parking).
+- Dublin commuters face the highest costs: €6,200/year average.
+- Remote workers save an estimated €3,500/year in commuting costs.
+- Each minute of congestion delay costs approximately €0.50 in lost productivity and fuel.
+
+Road Safety:
+- 150 road fatalities in 2024, down from 166 in 2023.
+- Rural roads account for 80% of fatalities despite carrying 40% of traffic.
+- Speed limits on rural national roads reduced from 100km/h to 80km/h in high-risk zones.
+
+Electric Vehicle Infrastructure:
+- 4,500 public EV charge points nationally (target: 12,000 by 2030).
+- Dublin has the densest network; rural coverage remains sparse.
+- EV registration share: 22% of new car sales in 2024.

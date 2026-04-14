@@ -1,0 +1,39 @@
+SEAI National Energy Efficiency & BER Report 2024
+
+Building Energy Ratings (BER) Overview:
+- Ireland's national BER database contains ratings for 1.1 million dwellings.
+- The average BER rating nationally is C2 (score ~3.5 on a 1-7 scale where 1=A1, 7=G).
+- Only 15% of Irish homes achieve an A or B rating.
+- 60% of homes are rated B, C, or D.
+- 25% of homes are rated E, F, or G — these are the least energy-efficient.
+
+County-Level BER Performance:
+- Best performing: Dublin (avg 3.2), Kildare (3.2), Meath (3.3). Newer housing stock in commuter belt drives better ratings.
+- Worst performing: Leitrim (4.5), Roscommon (4.4), Donegal (4.4). Older rural housing stock with poor insulation.
+- Cork City has significantly better BER (3.1) than rural Cork (4.0).
+
+Energy Costs by BER Rating:
+- A-rated home: estimated €900-1,200 annual energy cost.
+- B-rated home: estimated €1,400-1,800 annual energy cost.
+- C-rated home: estimated €2,000-2,500 annual energy cost.
+- D-rated home: estimated €2,600-3,000 annual energy cost.
+- E/F/G-rated home: estimated €3,200-4,500 annual energy cost.
+- The difference between an A-rated and G-rated home can exceed €3,000 per year.
+
+Retrofit Incentives:
+- SEAI National Home Energy Upgrade Scheme: grants of up to €25,000 for deep retrofit to B2 or better.
+- Individual measures: cavity wall insulation (€1,700 grant), attic insulation (€1,500), heat pump (€6,500).
+- The Warmer Homes Scheme provides free upgrades for households in energy poverty.
+- Since 2020, 120,000 homes have been retrofitted with SEAI support.
+
+Heat Pump Adoption:
+- 45,000 heat pumps installed in Ireland to date.
+- Government target: 400,000 heat pumps by 2030.
+- Heat pumps reduce heating costs by 40-60% compared to oil boilers.
+- Best suited to well-insulated homes (BER B3 or better).
+
+Climate Action Plan Targets:
+- All new buildings must be Nearly Zero Energy Buildings (NZEB) since 2021.
+- Target: 500,000 home retrofits to B2 rating by 2030.
+- Carbon tax on fossil fuels increases annually, making energy efficiency increasingly important.
+- By 2025, BER rating will be mandatory for all rental properties advertised.

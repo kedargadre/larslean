@@ -36,56 +36,63 @@ st.set_page_config(
 )
 
 
-# ── Data Loading & ML Pipeline ─────────────────────────────────
-@st.cache_data(show_spinner="Loading county data & training models...")
+# ── Data Loading — Pre-trained Models ──────────────────────────
+@st.cache_data(show_spinner="Loading pre-trained models...")
 def load_and_process_data():
-    """Load county-level data, run feature engineering, and train models."""
-    from data.generate_synthetic import generate_all_data
-    from ingestion.spatial_harmonizer import harmonize_data, get_time_series_data
-    from ml.feature_engineering import engineer_features
-    from ml.risk_model import train_risk_model
+    """Load pre-trained scored data and models from ml/models/."""
+    from ml.pipeline import load_artifacts
+    scored_df, models, feature_names = load_artifacts()
 
-    if not GEOJSON_FILE.exists():
-        generate_all_data()
+    # Aggregate ED-level scored_df to county level for county view
+    county_df = scored_df.groupby("county").agg(
+        {col: "mean" for col in scored_df.select_dtypes(include="number").columns}
+    ).reset_index()
 
-    df = harmonize_data()
+    available_features = [c for c in feature_names if c in county_df.columns]
+    X = county_df[available_features].fillna(0)
+
+    # Build time series from raw CSVs for forecast tab
+    ts_data = _load_time_series_safe()
     daft_summaries = _get_daft_summaries_safe()
-    df = engineer_features(df, daft_summaries=daft_summaries)
-    models, scored_df, feature_names = train_risk_model(df)
-    ts_data = get_time_series_data()
 
-    available_features = [c for c in feature_names if c in scored_df.columns]
-    X = scored_df[available_features].fillna(0)
-
-    return scored_df, models, feature_names, X, ts_data, daft_summaries
+    return county_df, models, feature_names, X, ts_data, daft_summaries
 
 
 @st.cache_data(show_spinner="Loading Electoral Division data...")
 def load_and_process_ed_data():
-    """Load ED-level data, run feature engineering, and train models."""
-    from config import CSO_ED_FILE
-    from data.generate_synthetic import generate_all_data
-    from ingestion.spatial_harmonizer import harmonize_ed_data, get_ed_time_series_data
-    from ml.feature_engineering import engineer_features
-    from ml.risk_model import train_risk_model
-
-    if not CSO_ED_FILE.exists():
-        generate_all_data()
-
-    df = harmonize_ed_data()
-    df = engineer_features(df, daft_summaries=None)  # No Daft data at ED level
-    models, scored_df, feature_names = train_risk_model(df)
-    ts_data = get_ed_time_series_data()
+    """Load pre-trained ED-level scored data from ml/models/."""
+    from ml.pipeline import load_artifacts
+    scored_df, models, feature_names = load_artifacts()
 
     available_features = [c for c in feature_names if c in scored_df.columns]
     X = scored_df[available_features].fillna(0)
 
+    # Build ED time series from raw CSVs
+    ts_data = _load_ed_time_series_safe()
+
     return scored_df, models, feature_names, X, ts_data
+
+
+@st.cache_data(show_spinner=False)
+def _load_time_series_safe() -> dict:
+    try:
+        from ingestion.spatial_harmonizer import get_time_series_data
+        return get_time_series_data()
+    except Exception:
+        return {}
+
+
+@st.cache_data(show_spinner=False)
+def _load_ed_time_series_safe() -> dict:
+    try:
+        from ingestion.spatial_harmonizer import get_ed_time_series_data
+        return get_ed_time_series_data()
+    except Exception:
+        return {}
 
 
 @st.cache_data(ttl=900, show_spinner=False)
 def _get_daft_summaries_safe() -> dict:
-    """Attempt to fetch Daft.ie summaries for all counties. Graceful on failure."""
     try:
         from ingestion.daft_client import get_county_market_summary
         summaries = {}
@@ -108,10 +115,7 @@ def main():
         scores_df, models, feature_names, X, ts_data, daft_summaries = load_and_process_data()
     except Exception as e:
         st.error(f"Error loading data: {e}")
-        st.info("Attempting to generate synthetic data...")
-        from data.generate_synthetic import generate_all_data
-        generate_all_data()
-        st.rerun()
+        st.info("Ensure ml/models/ contains pre-trained artifacts. Run `python -m ml.pipeline` to generate them.")
         return
 
     # Load ED-level data
@@ -317,11 +321,19 @@ def main():
         county_mask = scores_df["county"] == selected_county
         drivers = []
         if risk_model is not None and county_mask.any():
-            county_idx = scores_df[county_mask].index[0]
-            drivers = get_top_drivers(risk_model, X, county_idx, feature_names, n=5)
+            try:
+                county_idx = scores_df[county_mask].index[0]
+                drivers = get_top_drivers(risk_model, X, county_idx, feature_names, n=5)
+            except Exception:
+                pass
 
         market = (daft_summaries or {}).get(selected_county, {})
-        render_advisor_tab(selected_county, scores_df, drivers, market)
+        # Pass ED-level data for live TOPSIS inference
+        advisor_df = ed_scores_df if (ed_data_available and ed_scores_df is not None) else scores_df
+        render_advisor_tab(
+            selected_county, advisor_df, drivers, market,
+            models=models, feature_names=feature_names, ts_data=ts_data,
+        )
 
 
 def _render_overview_tab(

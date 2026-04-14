@@ -1,0 +1,39 @@
+RTB Rent Index Report Q4 2024 — Key Findings
+
+Overview:
+The Residential Tenancies Board (RTB) Rent Index tracks standardised average rents across Ireland using data from all registered tenancies. This report covers Q4 2024.
+
+National Trends:
+- National standardised average rent reached €1,612 per month in Q4 2024, up 5.6% year-on-year.
+- Dublin remains the most expensive county with average rents of €2,102 per month.
+- Outside Dublin, average rents are €1,334 per month.
+- Rent inflation has moderated from the 2022 peak of 12.6% to 5.6% in 2024.
+
+County-Level Highlights:
+- Dublin: €2,102/month (+4.8% YoY). Highest rents in Pembroke, Rathmines, and Ballsbridge EDs.
+- Cork: €1,489/month (+6.2% YoY). Cork City rents growing faster than county average.
+- Galway: €1,378/month (+7.1% YoY). Galway City experiencing acute supply shortage.
+- Limerick: €1,245/month (+5.4% YoY). Castletroy and Raheen seeing strong demand from UL students and tech workers.
+- Waterford: €1,089/month (+4.1% YoY). Most affordable of the cities.
+
+Affordability Analysis:
+- Nationally, 42% of tenants spend more than 30% of net income on rent (housing-cost-burdened).
+- In Dublin, this figure rises to 58%.
+- The most affordable counties for renters are Leitrim (€728/month), Roscommon (€745/month), and Longford (€762/month).
+- Rent Pressure Zones (RPZs) cap annual rent increases at 2% in designated areas, covering most urban centres.
+
+Supply Indicators:
+- Total registered tenancies: 342,000 nationally.
+- New tenancy registrations fell 8% YoY, indicating reduced turnover and fewer available units.
+- Dublin has approximately 1,200 rental listings at any given time, down from 4,500 in 2019.
+
+Rental Yield Analysis:
+- National average gross rental yield: 5.2%.
+- Dublin yields are compressed at 3.8% due to high property prices.
+- Highest yields found in Longford (6.1%), Leitrim (5.9%), and Roscommon (5.8%).
+- Yields above 5% are considered attractive for buy-to-let investors.
+
+Policy Context:
+- The Residential Tenancies (Amendment) Act 2024 extended RPZ protections.
+- The Housing Assistance Payment (HAP) scheme supports 62,000 households nationally.
+- The Cost Rental model (targeting rents 25% below market) has delivered 1,200 units to date.
