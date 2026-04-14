@@ -321,11 +321,19 @@ def main():
         county_mask = scores_df["county"] == selected_county
         drivers = []
         if risk_model is not None and county_mask.any():
-            county_idx = scores_df[county_mask].index[0]
-            drivers = get_top_drivers(risk_model, X, county_idx, feature_names, n=5)
+            try:
+                county_idx = scores_df[county_mask].index[0]
+                drivers = get_top_drivers(risk_model, X, county_idx, feature_names, n=5)
+            except Exception:
+                pass
 
         market = (daft_summaries or {}).get(selected_county, {})
-        render_advisor_tab(selected_county, scores_df, drivers, market)
+        # Pass ED-level data for live TOPSIS inference
+        advisor_df = ed_scores_df if (ed_data_available and ed_scores_df is not None) else scores_df
+        render_advisor_tab(
+            selected_county, advisor_df, drivers, market,
+            models=models, feature_names=feature_names, ts_data=ts_data,
+        )
 
 
 def _render_overview_tab(

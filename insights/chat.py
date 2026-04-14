@@ -67,6 +67,9 @@ def render_advisor_tab(
     scores_df: pd.DataFrame,
     drivers: list | None = None,
     market: dict | None = None,
+    models: dict | None = None,
+    feature_names: list | None = None,
+    ts_data: dict | None = None,
 ):
     """
     Render the AI Advisor as a full tab.
@@ -76,11 +79,17 @@ def render_advisor_tab(
     """
     st.markdown("### 🤖 Léarslán AI Advisor")
     st.caption(
-        f"Context: **{selected_county}** · Ask about scores, affordability, "
-        "housing policy, or get relocation advice."
+        f"Context: **{selected_county}** · Powered by live ML models (GBM, TOPSIS, SHAP, ARIMA)"
     )
 
     _ensure_session_state()
+
+    # Store models in session state for live inference
+    st.session_state["_advisor_models"] = models or {}
+    st.session_state["_advisor_feature_names"] = feature_names or []
+    st.session_state["_advisor_scored_df"] = scores_df
+    st.session_state["_advisor_ts_data"] = ts_data
+    st.session_state["_advisor_county"] = selected_county
 
     # Build context
     area_context = build_area_context(selected_county, scores_df, drivers, market)
@@ -168,20 +177,35 @@ def _trim_history():
 
 
 def _generate_response(query: str, area_context: str, page_context: dict) -> str:
-    """Generate a response using Gemini with hybrid RAG context, or fall back to templates."""
-    # 1. Retrieve RAG context
+    """Generate a response using live ML inference + RAG + LLM."""
+    # 1. Run live ML models based on query intent
+    from insights.ml_tools import build_ml_context
+    ml_context = ""
+    try:
+        ml_context = build_ml_context(
+            query=query,
+            scored_df=st.session_state.get("_advisor_scored_df", pd.DataFrame()),
+            models=st.session_state.get("_advisor_models", {}),
+            feature_names=st.session_state.get("_advisor_feature_names", []),
+            selected_county=st.session_state.get("_advisor_county", ""),
+            ts_data=st.session_state.get("_advisor_ts_data"),
+        )
+    except Exception as e:
+        logger.warning("ML inference failed: %s", e)
+
+    # 2. Retrieve RAG context
     rag_engine = _get_cached_rag_engine()
     rag_results = rag_engine.retrieve(query, top_k=3)
 
-    # 2. Assemble full prompt
-    full_system = _assemble_system_prompt(area_context, page_context, rag_results)
+    # 3. Assemble full prompt with ML context
+    full_system = _assemble_system_prompt(area_context, page_context, rag_results, ml_context)
 
-    # 3. Try Gemini — single API call per message
+    # 4. Try LLM — single API call per message
     try:
         result = _call_gemini(query, full_system)
         return result
     except Exception as e:
-        logger.warning("Gemini call failed: %s", e)
+        logger.warning("LLM call failed: %s", e)
         st.warning(f"LLM error: {e}")
         return _template_fallback(query, area_context, rag_results)
 
@@ -190,6 +214,7 @@ def _assemble_system_prompt(
     area_context: str,
     page_context: dict,
     rag_results: list[dict],
+    ml_context: str = "",
 ) -> str:
     """Build the full system prompt with all context layers."""
     parts = [_SYSTEM_PROMPT]
@@ -198,8 +223,17 @@ def _assemble_system_prompt(
     desc = page_context.get("natural_description", "browsing the dashboard")
     parts.append(f"\n--- CURRENT PAGE CONTEXT ---\nThe user is currently {desc}.")
 
-    # Layer 2: Area data
-    parts.append(f"\n--- AREA DATA ---\n{area_context}")
+    # Layer 2: Area data (static scores from pre-trained models)
+    parts.append(f"\n--- AREA DATA (from pre-trained GBM models) ---\n{area_context}")
+
+    # Layer 3: Live ML inference results
+    if ml_context:
+        parts.append(f"\n--- LIVE MODEL INFERENCE (run just now for this query) ---{ml_context}")
+        parts.append(
+            "\nIMPORTANT: The live model results above were computed in real-time "
+            "using the trained ML models. Prioritize these over static data when answering. "
+            "Always cite the model used, e.g. [Model: TOPSIS ranking] or [Model: SHAP analysis]."
+        )
 
     # Layer 3: RAG documents
     if rag_results:
