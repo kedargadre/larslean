@@ -1,6 +1,8 @@
 """Léarslán V3 — Configuration & Constants (Electoral Division Level)"""
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv(override=True)  # always prefer .env values over stale system env vars
 
 # ── Project Paths ──────────────────────────────────────────────
 PROJECT_DIR = Path(__file__).parent
@@ -41,6 +43,31 @@ IRISH_COUNTIES = [
     "Offaly", "Roscommon", "Sligo", "Tipperary", "Waterford",
     "Westmeath", "Wexford", "Wicklow",
 ]
+
+# ── Province → counties mapping (used to scope county-mode matches) ──
+COUNTY_PROVINCE = {
+    # Leinster
+    "Carlow": "Leinster", "Dublin": "Leinster", "Kildare": "Leinster",
+    "Kilkenny": "Leinster", "Laois": "Leinster", "Longford": "Leinster",
+    "Louth": "Leinster", "Meath": "Leinster", "Offaly": "Leinster",
+    "Westmeath": "Leinster", "Wexford": "Leinster", "Wicklow": "Leinster",
+    # Munster
+    "Clare": "Munster", "Cork": "Munster", "Kerry": "Munster",
+    "Limerick": "Munster", "Tipperary": "Munster", "Waterford": "Munster",
+    # Connacht
+    "Galway": "Connacht", "Leitrim": "Connacht", "Mayo": "Connacht",
+    "Roscommon": "Connacht", "Sligo": "Connacht",
+    # Ulster (Republic of Ireland portion)
+    "Cavan": "Ulster", "Donegal": "Ulster", "Monaghan": "Ulster",
+}
+
+
+def get_province_counties(county: str) -> list:
+    """Return all counties in the same province as the given county."""
+    province = COUNTY_PROVINCE.get(county)
+    if not province:
+        return []
+    return [c for c, p in COUNTY_PROVINCE.items() if p == province]
 
 # ── County Centroids (lat, lon) ────────────────────────────────
 COUNTY_CENTROIDS = {
@@ -490,8 +517,12 @@ MAP_ZOOM = 7
 RISK_THRESHOLDS = {"Low": (0, 33), "Medium": (34, 66), "High": (67, 100)}
 
 # ── OpenAI Settings ────────────────────────────────────────────
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 OPENAI_MODEL = "gpt-4o-mini"
+
+# ── Anthropic Settings ─────────────────────────────────────────
+ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
+ANTHROPIC_MODEL = "claude-haiku-4-5-20251001"
 
 # ── Forecasting Settings ──────────────────────────────────────
 FORECAST_PERIODS = 6  # months ahead
