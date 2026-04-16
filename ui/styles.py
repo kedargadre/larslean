@@ -3,56 +3,56 @@ import streamlit as st
 
 
 def inject_css():
-    """Inject premium dark theme CSS."""
+    """Inject premium light theme CSS."""
     st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
     /* ── Global ──────────────────────────────────── */
     .stApp {
-        background: linear-gradient(135deg, #0a1628 0%, #0f1f3d 50%, #0a1628 100%);
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
         font-family: 'Inter', sans-serif;
-        color: #e2e8f0;
+        color: #1e293b;
     }
 
     .stApp > header { background: transparent; }
 
     /* ── Sidebar ─────────────────────────────────── */
     section[data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #0d1b2a 0%, #111a2e 100%);
-        border-right: 1px solid rgba(30, 41, 59, 0.5);
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        border-right: 1px solid rgba(148, 163, 184, 0.3);
     }
 
     section[data-testid="stSidebar"] .stMarkdown {
-        color: #e2e8f0;
+        color: #334155;
     }
 
     /* ── Tabs ─────────────────────────────────────── */
     .stTabs [data-baseweb="tab-list"] {
         gap: 4px;
-        background: rgba(17, 26, 46, 0.6);
+        background: rgba(255, 255, 255, 0.6);
         border-radius: 12px;
         padding: 4px;
-        border: 1px solid rgba(30, 41, 59, 0.5);
+        border: 1px solid rgba(203, 213, 225, 0.5);
     }
 
     .stTabs [data-baseweb="tab"] {
         border-radius: 8px;
         padding: 8px 16px;
-        color: #94a3b8;
+        color: #64748b;
         font-weight: 600;
         font-size: 0.9rem;
         transition: all 0.3s ease;
     }
 
     .stTabs [data-baseweb="tab"]:hover {
-        color: #e2e8f0;
-        background: rgba(59, 130, 246, 0.1);
+        color: #1e293b;
+        background: rgba(59, 130, 246, 0.06);
     }
 
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(59, 130, 246, 0.15)) !important;
-        color: #e2e8f0 !important;
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(59, 130, 246, 0.1)) !important;
+        color: #0f172a !important;
         border-bottom: 2px solid #10b981;
     }
 
@@ -68,19 +68,20 @@ def inject_css():
 
     /* ── Cards ────────────────────────────────────── */
     .metric-card {
-        background: linear-gradient(135deg, rgba(17, 26, 46, 0.9), rgba(26, 39, 68, 0.7));
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.8));
         backdrop-filter: blur(12px);
         border: 1px solid rgba(59, 130, 246, 0.15);
         border-radius: 16px;
         padding: 24px;
         margin: 8px 0;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        color: #1e293b;
     }
 
     .metric-card:hover {
-        border-color: rgba(59, 130, 246, 0.4);
-        box-shadow: 0 8px 32px rgba(59, 130, 246, 0.15);
+        border-color: rgba(59, 130, 246, 0.3);
+        box-shadow: 0 8px 30px rgba(59, 130, 246, 0.12);
         transform: translateY(-2px);
     }
 
@@ -88,7 +89,7 @@ def inject_css():
         font-size: 2.2rem;
         font-weight: 800;
         line-height: 1;
-        background: linear-gradient(135deg, #10b981, #3b82f6);
+        background: linear-gradient(135deg, #059669, #2563eb);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
@@ -97,7 +98,7 @@ def inject_css():
         font-size: 0.85rem;
         text-transform: uppercase;
         letter-spacing: 1.5px;
-        color: #94a3b8;
+        color: #64748b;
         margin-bottom: 8px;
         font-weight: 600;
     }
@@ -108,9 +109,9 @@ def inject_css():
         margin-top: 4px;
     }
 
-    .delta-up { color: #ef4444; }
-    .delta-down { color: #10b981; }
-    .delta-stable { color: #f59e0b; }
+    .delta-up { color: #dc2626; }
+    .delta-down { color: #059669; }
+    .delta-stable { color: #d97706; }
 
     /* ── Score Badge ──────────────────────────────── */
     .score-badge {
@@ -125,28 +126,28 @@ def inject_css():
     }
 
     .badge-high {
-        background: rgba(239, 68, 68, 0.15);
-        color: #ef4444;
-        border: 1px solid rgba(239, 68, 68, 0.3);
+        background: rgba(239, 68, 68, 0.1);
+        color: #dc2626;
+        border: 1px solid rgba(239, 68, 68, 0.25);
     }
 
     .badge-medium {
-        background: rgba(245, 158, 11, 0.15);
-        color: #f59e0b;
-        border: 1px solid rgba(245, 158, 11, 0.3);
+        background: rgba(245, 158, 11, 0.1);
+        color: #d97706;
+        border: 1px solid rgba(245, 158, 11, 0.25);
     }
 
     .badge-low {
-        background: rgba(16, 185, 129, 0.15);
-        color: #10b981;
-        border: 1px solid rgba(16, 185, 129, 0.3);
+        background: rgba(16, 185, 129, 0.1);
+        color: #059669;
+        border: 1px solid rgba(16, 185, 129, 0.25);
     }
 
     /* ── Title ────────────────────────────────────── */
     .dashboard-title {
         font-size: 2.2rem;
         font-weight: 800;
-        background: linear-gradient(135deg, #10b981 0%, #3b82f6 50%, #8b5cf6 100%);
+        background: linear-gradient(135deg, #059669 0%, #2563eb 50%, #7c3aed 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         margin-bottom: 0;
@@ -155,30 +156,31 @@ def inject_css():
 
     .dashboard-subtitle {
         font-size: 1rem;
-        color: #94a3b8;
+        color: #64748b;
         margin-top: 4px;
         font-weight: 400;
     }
 
     /* ── Insight Box ──────────────────────────────── */
     .insight-box {
-        background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(59, 130, 246, 0.05));
-        border: 1px solid rgba(16, 185, 129, 0.2);
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.04), rgba(59, 130, 246, 0.02));
+        border: 1px solid rgba(16, 185, 129, 0.15);
         border-radius: 12px;
         padding: 20px;
         margin: 12px 0;
         line-height: 1.7;
         font-size: 0.95rem;
+        color: #334155;
     }
 
     /* ── Section Headers ─────────────────────────── */
     .section-header {
         font-size: 1.1rem;
         font-weight: 700;
-        color: #e2e8f0;
+        color: #0f172a;
         margin: 20px 0 12px 0;
         padding-bottom: 8px;
-        border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+        border-bottom: 2px solid rgba(59, 130, 246, 0.2);
         display: flex;
         align-items: center;
         gap: 8px;
@@ -209,7 +211,7 @@ def inject_css():
     /* ── Map Container ───────────────────────────── */
     iframe {
         border-radius: 16px;
-        border: 1px solid rgba(30, 41, 59, 0.5);
+        border: 1px solid rgba(203, 213, 225, 0.6);
     }
 
     /* ── Loading Animation ───────────────────────── */
@@ -219,17 +221,17 @@ def inject_css():
 
     /* ── Divider ──────────────────────────────────── */
     hr {
-        border-color: rgba(30, 41, 59, 0.5);
+        border-color: rgba(203, 213, 225, 0.6);
         margin: 20px 0;
     }
 
     /* ── Pill Radio (zoom level selector) ────────── */
     .stRadio > div {
         gap: 0px;
-        background: rgba(30, 41, 59, 0.55);
+        background: rgba(241, 245, 249, 0.8);
         border-radius: 10px;
         padding: 3px;
-        border: 1px solid rgba(71, 85, 105, 0.5);
+        border: 1px solid rgba(203, 213, 225, 0.6);
         display: inline-flex !important;
     }
 
@@ -240,11 +242,11 @@ def inject_css():
         transition: background 0.15s ease, color 0.15s ease;
     }
 
-    /* Unselected pill — bright-enough text to read over dark bg */
+    /* Unselected pill — dark enough text to read over light bg */
     .stRadio [data-baseweb="radio"] label,
     .stRadio [data-baseweb="radio"] label p,
     .stRadio [data-baseweb="radio"] label div {
-        color: #e2e8f0 !important;
+        color: #475569 !important;
         font-size: 0.9rem !important;
         font-weight: 500 !important;
         cursor: pointer !important;
@@ -254,13 +256,13 @@ def inject_css():
     .stRadio [data-baseweb="radio"]:hover label,
     .stRadio [data-baseweb="radio"]:hover label p,
     .stRadio [data-baseweb="radio"]:hover label div {
-        color: #ffffff !important;
+        color: #1e293b !important;
     }
 
     /* Selected pill highlight */
     .stRadio [data-baseweb="radio"][aria-checked="true"] {
         background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.35);
+        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
     }
 
     .stRadio [data-baseweb="radio"][aria-checked="true"] label,
@@ -276,19 +278,19 @@ def inject_css():
         height: 6px;
     }
     ::-webkit-scrollbar-track {
-        background: #0a1628;
+        background: #f8fafc;
     }
     ::-webkit-scrollbar-thumb {
-        background: #1e293b;
+        background: #cbd5e1;
         border-radius: 3px;
     }
     ::-webkit-scrollbar-thumb:hover {
-        background: #334155;
+        background: #94a3b8;
     }
 
     /* ── Slider Labels ────────────────────────────── */
     .stSlider label p, .stSlider label span {
-        color: #e2e8f0 !important;
+        color: #1e293b !important;
         font-weight: 500;
     }
     .stSlider [data-testid="stTickBarMin"],
