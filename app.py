@@ -15,8 +15,20 @@ from pathlib import Path
 PROJECT_DIR = Path(__file__).parent
 sys.path.insert(0, str(PROJECT_DIR))
 
+import os
 from dotenv import load_dotenv
 load_dotenv()
+
+# Inject Streamlit secrets into environment variables for Streamlit Cloud
+try:
+    if hasattr(st, "secrets"):
+        for k, v in st.secrets.items():
+            if isinstance(v, str):
+                os.environ[k] = v
+            elif isinstance(v, (int, float, bool)):
+                os.environ[k] = str(v)
+except Exception:
+    pass
 
 from config import IRISH_COUNTIES, GEOJSON_FILE, get_county_eds, get_province_counties, COUNTY_PROVINCE
 from ui.styles import inject_css, metric_card
