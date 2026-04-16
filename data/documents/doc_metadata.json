@@ -1,0 +1,26 @@
+{
+  "housing_for_all_plan.txt": {
+    "title": "National Development Plan 2021-2030 — Housing Strategy",
+    "source_url": "https://www.gov.ie/en/publication/ef5ec-housing-for-all/",
+    "published": "2021",
+    "authority": "Government of Ireland"
+  },
+  "rtb_rent_report_2024.txt": {
+    "title": "RTB Rent Index Report Q4 2023",
+    "source_url": "https://www.rtb.ie/research/rent-index",
+    "published": "2024-03",
+    "authority": "Residential Tenancies Board"
+  },
+  "seai_energy_report.txt": {
+    "title": "SEAI National BER Research Report",
+    "source_url": "https://www.seai.ie/data-and-insights/seai-statistics/key-publications/",
+    "published": "2023",
+    "authority": "Sustainable Energy Authority of Ireland"
+  },
+  "national_housing_strategy.txt": {
+    "title": "National Housing Strategy Archive",
+    "source_url": "https://www.gov.ie/en/housing/",
+    "published": "2020",
+    "authority": "Government of Ireland"
+  }
+}
