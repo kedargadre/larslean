@@ -320,17 +320,109 @@ def inject_css():
     /* ── Hide Streamlit Branding ──────────────────── */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
+
+    /* ── Info Tooltip Widget ─────────────────────── */
+    .info-tooltip-wrap {
+        display: inline-block;
+        position: relative;
+        margin-left: 5px;
+        vertical-align: middle;
+        cursor: help;
+    }
+    .info-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #cbd5e1;
+        color: #475569;
+        font-size: 10px;
+        font-weight: 700;
+        font-style: normal;
+        line-height: 1;
+        transition: background 0.2s ease;
+        user-select: none;
+    }
+    .info-tooltip-wrap:hover .info-icon {
+        background: #3b82f6;
+        color: #ffffff;
+    }
+    .tooltip-box {
+        visibility: hidden;
+        opacity: 0;
+        pointer-events: none;
+        position: absolute;
+        bottom: calc(100% + 8px);
+        left: 50%;
+        transform: translateX(-50%);
+        width: 260px;
+        background: #1e293b;
+        color: #e2e8f0;
+        font-size: 0.78rem;
+        line-height: 1.55;
+        padding: 10px 13px;
+        border-radius: 10px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+        border: 1px solid rgba(59,130,246,0.25);
+        z-index: 99999;
+        text-align: left;
+        transition: opacity 0.2s ease, visibility 0.2s ease;
+        white-space: normal;
+    }
+    .tooltip-box::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 6px solid transparent;
+        border-top-color: #1e293b;
+    }
+    .info-tooltip-wrap:hover .tooltip-box {
+        visibility: visible;
+        opacity: 1;
+    }
+    /* Map header info icon (bigger) */
+    .map-metric-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+    .map-metric-header .info-icon {
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+    }
+    .map-metric-header .tooltip-box {
+        width: 300px;
+        font-size: 0.82rem;
+    }
     </style>
     """, unsafe_allow_html=True)
 
 
-def metric_card(label: str, value: str, delta: str = "", delta_type: str = "stable") -> str:
-    """Generate HTML for a metric card."""
+def info_tooltip(text: str) -> str:
+    """Generate an inline ℹ info icon with a hover tooltip."""
+    safe_text = text.replace('"', '&quot;').replace("'", "&#39;")
+    return (
+        f'<span class="info-tooltip-wrap">'
+        f'<i class="info-icon">i</i>'
+        f'<span class="tooltip-box">{text}</span>'
+        f'</span>'
+    )
+
+
+def metric_card(label: str, value: str, delta: str = "", delta_type: str = "stable", tooltip: str = "") -> str:
+    """Generate HTML for a metric card with an optional info tooltip."""
     delta_class = f"delta-{delta_type}"
     delta_html = f'<div class="metric-delta {delta_class}">{delta}</div>' if delta else ""
+    tip_html = info_tooltip(tooltip) if tooltip else ""
     return f"""
     <div class="metric-card">
-        <div class="metric-label">{label}</div>
+        <div class="metric-label">{label}{tip_html}</div>
         <div class="metric-value">{value}</div>
         {delta_html}
     </div>

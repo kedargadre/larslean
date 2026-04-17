@@ -68,6 +68,17 @@ def _render_county_map(scores_df: pd.DataFrame, selected_metric: str) -> dict:
             with open(GEOJSON_FILE, "r") as f:
                 geojson_data = json.load(f)
 
+            # ── Patch mislabelled county names ────────────────────
+            # Cork's GeoJSON feature has name='NA' instead of 'Cork'
+            # (name_irish='Corcaigh', iso='IE-CO'). Fix at load time.
+            _GEOJSON_NAME_FIXES = {
+                "NA": "Cork",  # iso=IE-CO, name_irish=Corcaigh
+            }
+            for feature in geojson_data["features"]:
+                raw_name = feature["properties"].get("name", "")
+                if raw_name in _GEOJSON_NAME_FIXES:
+                    feature["properties"]["name"] = _GEOJSON_NAME_FIXES[raw_name]
+
             choropleth = folium.Choropleth(
                 geo_data=geojson_data,
                 name="choropleth",
