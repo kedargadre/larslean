@@ -31,7 +31,7 @@ except Exception:
     pass
 
 from config import IRISH_COUNTIES, GEOJSON_FILE, get_county_eds, get_province_counties, COUNTY_PROVINCE
-from ui.styles import inject_css, metric_card
+from ui.styles import inject_css, metric_card, info_tooltip
 from ui.map_view import render_map
 from ui.sidebar import render_sidebar
 from ui.charts import county_comparison_chart
@@ -114,32 +114,55 @@ def _show_matches_dialog(top3, level, full_df, selected_county=None, scope_label
         rent = row.get("avg_monthly_rent", 0)
         in_red = remaining < 0
 
+        # Light mode colors
         remaining_color = "#10b981" if remaining > 500 else "#f59e0b" if remaining > 0 else "#ef4444"
-        card_border = "rgba(239,68,68,0.5)" if in_red else f"{label_color}40"
-        card_bg = "rgba(60,10,10,0.7)" if in_red else "rgba(17,26,46,0.8)"
+        card_bg = "#FFF0F0" if in_red else "#FFFFFF"
+        card_border = "#EF4444" if in_red else f"{label_color}55"
+        card_shadow = "0 4px 16px rgba(239,68,68,0.12)" if in_red else "0 4px 16px rgba(0,0,0,0.07)"
+        text_dark = "#0F172A"
+        text_muted = "#64748B"
+
         red_warning = (
-            f'<div style="background:#ef444420;border:1px solid #ef4444;border-radius:6px;'
-            f'padding:6px 8px;margin-top:8px;font-size:0.78rem;color:#ef4444;font-weight:600;">'
-            f'⚠️ Rent (€{rent:,.0f}) exceeds your budget — you\'d be €{abs(remaining):,.0f}/mo in the red</div>'
+            f'<div style="background:#fef2f2;border:1px solid #fca5a5;border-radius:6px;'
+            f'padding:6px 10px;margin-top:10px;font-size:0.78rem;color:#dc2626;font-weight:600;">'
+            f'⚠️ Rent (€{rent:,.0f}) exceeds your budget — €{abs(remaining):,.0f}/mo over</div>'
             if in_red else ""
         )
         return f"""
-        <div style="background:{card_bg};border:1px solid {card_border};
-                    border-radius:12px;padding:16px;text-align:center;height:100%;">
-            <div style="font-size:2rem;">{"🚨" if in_red else medal_icon}</div>
-            <div style="font-size:1.2rem;font-weight:700;color:#e2e8f0;margin:4px 0;">{name}</div>
-            <div style="font-size:1.5rem;font-weight:800;color:{label_color};margin:6px 0;">
-                {score:.0f}/100
+        <div style="background:{card_bg};border:1.5px solid {card_border};
+                    border-radius:14px;padding:20px 16px;text-align:center;height:100%;
+                    box-shadow:{card_shadow};">
+            <div style="font-size:2.2rem;margin-bottom:4px;">{"🚨" if in_red else medal_icon}</div>
+            <div style="font-size:1.15rem;font-weight:700;color:{text_dark};margin:4px 0 2px;">{name}</div>
+            <div style="font-size:1.8rem;font-weight:800;color:{label_color};margin:8px 0;
+                        letter-spacing:-0.5px;">
+                {score:.0f}<span style="font-size:1rem;font-weight:500;color:{text_muted}">/100</span>
             </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;
-                        text-align:left;font-size:0.82rem;margin-top:8px;">
-                <div><span style="color:#94a3b8;">RENT</span><br><b>€{rent:,.0f}</b></div>
-                <div><span style="color:#94a3b8;">LEFT</span><br>
-                    <b style="color:{remaining_color};">€{remaining:,.0f}</b></div>
-                <div><span style="color:#94a3b8;">RISK</span><br><b>{risk:.0f}</b></div>
-                <div><span style="color:#94a3b8;">LIVABILITY</span><br><b>{livability:.0f}</b></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;
+                        text-align:left;margin-top:12px;padding:12px;
+                        background:#F8FAFC;border-radius:10px;border:1px solid #E2E8F0;">
+                <div>
+                    <div style="font-size:0.7rem;font-weight:700;color:{text_muted};
+                                text-transform:uppercase;letter-spacing:0.06em;">Rent</div>
+                    <div style="font-size:1.05rem;font-weight:700;color:{text_dark};margin-top:2px;">€{rent:,.0f}</div>
+                </div>
+                <div>
+                    <div style="font-size:0.7rem;font-weight:700;color:{text_muted};
+                                text-transform:uppercase;letter-spacing:0.06em;">Left</div>
+                    <div style="font-size:1.05rem;font-weight:700;color:{remaining_color};margin-top:2px;">€{remaining:,.0f}</div>
+                </div>
+                <div>
+                    <div style="font-size:0.7rem;font-weight:700;color:{text_muted};
+                                text-transform:uppercase;letter-spacing:0.06em;">Risk</div>
+                    <div style="font-size:1.05rem;font-weight:700;color:{text_dark};margin-top:2px;">{risk:.0f}</div>
+                </div>
+                <div>
+                    <div style="font-size:0.7rem;font-weight:700;color:{text_muted};
+                                text-transform:uppercase;letter-spacing:0.06em;">Livability</div>
+                    <div style="font-size:1.05rem;font-weight:700;color:{text_dark};margin-top:2px;">{livability:.0f}</div>
+                </div>
             </div>
-            <div style="margin-top:8px;font-size:0.8rem;color:#94a3b8;">{fit}</div>
+            <div style="margin-top:10px;font-size:0.82rem;color:{text_muted};font-weight:500;">{fit}</div>
             {red_warning}
         </div>"""
 
@@ -165,7 +188,7 @@ def _show_matches_dialog(top3, level, full_df, selected_county=None, scope_label
             )
             sel_col, _ = st.columns([1, 2])
             with sel_col:
-                st.markdown(_match_card(sel_row, "#60a5fa", "#60a5fa", "📍"),
+                st.markdown(_match_card(sel_row, "#2563EB", "#2563EB", "📍"),
                             unsafe_allow_html=True)
     elif selected_county and level == "county" and selected_county in top3_names:
         st.caption(f"✓ Your selected county ({selected_county}) is already in your top matches.")
@@ -325,7 +348,7 @@ def main():
     with scope_cols[2]:
         selected_metric = st.selectbox(
             "📊 Map Metric",
-            ["risk_score", "livability_score", "transport_score", "affordability_score"],
+            ["livability_score", "risk_score", "transport_score", "affordability_score"],
             format_func=lambda x: {
                 "risk_score": "🔴 Risk Score",
                 "livability_score": "🟢 Livability Score",
@@ -417,6 +440,37 @@ def main():
             work_mode=prefs.get("work_mode", "remote"),
             priorities=_priorities,
         )
+
+        # ── Persist results + prefs for AI Advisor ────────────
+        name_col = "ed_name" if _level == "ed" else "county"
+        top3 = _ranked_full.head(3)
+        top3_summary = []
+        for _, row in top3.iterrows():
+            top3_summary.append({
+                "name": row.get(name_col, "Unknown"),
+                "match_score": round(row.get("match_score", 0), 1),
+                "rent": round(row.get("avg_monthly_rent", 0), 0),
+                "monthly_remaining": round(row.get("monthly_remaining", 0), 0),
+                "budget_fit": row.get("budget_fit", ""),
+                "risk_score": round(row.get("risk_score", 0), 1),
+                "livability_score": round(row.get("livability_score", 0), 1),
+            })
+        st.session_state["_advisor_top_matches"] = {
+            "scope": _scope_label,
+            "level": _level,
+            "top3": top3_summary,
+        }
+        st.session_state["_advisor_prefs"] = {
+            "budget": prefs.get("budget", 3500),
+            "family_size": prefs.get("family_size", 1),
+            "work_mode": prefs.get("work_mode", "remote"),
+            "commute": prefs.get("commute", "medium"),
+            "w_afford": prefs.get("w_afford", 0.3),
+            "w_live": prefs.get("w_live", 0.25),
+            "w_safe": prefs.get("w_safe", 0.2),
+            "w_trans": prefs.get("w_trans", 0.15),
+        }
+
         _show_matches_dialog(
             _ranked_full.head(3), _level, _ranked_full, selected_county, _scope_label,
         )
@@ -468,6 +522,7 @@ def main():
         active_tab=st.session_state.get("current_tab", "overview"),
         selected_county=selected_county,
         selected_ed_id=selected_ed_id,
+        selected_ed_name=selected_ed_name,
         selected_metric=selected_metric,
         spatial_level="ed" if is_ed_mode else "county",
     )
@@ -492,6 +547,40 @@ def _render_overview_tab(
     """Render the Overview tab — county level (map + detail panel)."""
     from ml.risk_model import get_risk_label, get_risk_trend, get_affordability_label
 
+    # ── Metric tooltip explanations ───────────────────────────
+    METRIC_TIPS = {
+        "risk_score": (
+            "Composite risk score (0–100, lower is safer). Driven by rent growth rate, "
+            "employment volatility, congestion delays, energy costs, and income levels. "
+            "Trained using a Gradient Boosting Machine (GBM) on CSO, TII, SEAI & RTB data."
+        ),
+        "avg_monthly_rent": (
+            "Average monthly private rent from RTB (Residential Tenancies Board) data. "
+            "Reflects actual registered tenancy prices, not asking rents. "
+            "Influenced by housing supply, demand pressure, and local income levels."
+        ),
+        "true_cost_index": (
+            "Composite cost-of-living score combining rent, estimated annual energy costs, "
+            "and commute costs (fuel/time). Higher = more expensive overall. "
+            "Formula: (Rent × 12 + Energy Cost + Commute Cost) normalised to 0–100."
+        ),
+        "affordability_score": (
+            "How affordable this area is relative to national benchmarks (0–100, higher is better). "
+            "Key drivers: rent-to-income ratio, BER energy rating, employment rate, "
+            "and rent growth trajectory. Computed by GBM scoring model."
+        ),
+        "livability_score": (
+            "Quality-of-life composite score (0–100, higher is better). "
+            "Factors: employment rate, green space, community services, BER energy efficiency, "
+            "and low congestion. Modelled from CSO census and SEAI energy data."
+        ),
+        "transport_score": (
+            "Transport connectivity score (0–100, higher is better). "
+            "Driven by average congestion delay minutes, proximity to major routes (TII data), "
+            "and commute time estimates. Lower congestion = higher score."
+        ),
+    }
+
     col1, col2, col3, col4, col5 = st.columns(5)
 
     county_row = scores_df[scores_df["county"] == selected_county]
@@ -509,6 +598,7 @@ def _render_overview_tab(
                 "Risk Score", f"{risk:.0f}/100",
                 f"{label} • {trend}",
                 "up" if trend == "Increasing" else "stable" if trend == "Stable" else "down",
+                tooltip=METRIC_TIPS["risk_score"],
             ), unsafe_allow_html=True)
         with col3:
             rent = cr.get("avg_monthly_rent", 0)
@@ -517,6 +607,7 @@ def _render_overview_tab(
                 "Monthly Rent", f"€{rent:,.0f}",
                 f"{rent_growth:+.1f}% growth",
                 "up" if rent_growth > 10 else "stable" if rent_growth > 3 else "down",
+                tooltip=METRIC_TIPS["avg_monthly_rent"],
             ), unsafe_allow_html=True)
         with col4:
             true_cost = cr.get("true_cost_index", 0)
@@ -524,6 +615,7 @@ def _render_overview_tab(
                 "True Cost Index", f"{true_cost:.0f}",
                 "Composite score",
                 "stable",
+                tooltip=METRIC_TIPS["true_cost_index"],
             ), unsafe_allow_html=True)
         with col5:
             afford = cr.get("affordability_score", 50)
@@ -531,6 +623,7 @@ def _render_overview_tab(
                 "Affordability", f"{afford:.0f}/100",
                 get_affordability_label(afford),
                 "down" if afford > 66 else "stable" if afford > 33 else "up",
+                tooltip=METRIC_TIPS["affordability_score"],
             ), unsafe_allow_html=True)
 
     st.markdown("---")
@@ -541,7 +634,13 @@ def _render_overview_tab(
         "transport_score": "🔵 Transport Score",
         "affordability_score": "💰 Affordability Score",
     }
-    st.markdown(f'<div class="section-header">🗺️ Ireland — {_metric_labels.get(selected_metric, selected_metric)}</div>', unsafe_allow_html=True)
+    metric_label = _metric_labels.get(selected_metric, selected_metric)
+    tip_text = METRIC_TIPS.get(selected_metric, "")
+    tip_icon = info_tooltip(tip_text) if tip_text else ""
+    st.markdown(
+        f'<div class="map-metric-header section-header">🗺️ Ireland — {metric_label}{tip_icon}</div>',
+        unsafe_allow_html=True,
+    )
     render_map(scores_df, selected_metric)
 
     # ── County Detail (collapsible) ───────────────────────────
@@ -562,6 +661,40 @@ def _render_ed_overview_tab(
 ):
     """Render the Overview tab — Neighbourhood level (ED map + detail panel)."""
     from ml.risk_model import get_risk_label, get_affordability_label
+
+    # ── Metric tooltip explanations (same as county tab) ─────
+    METRIC_TIPS = {
+        "risk_score": (
+            "Composite risk score (0–100, lower is safer). Driven by rent growth rate, "
+            "employment volatility, congestion delays, energy costs, and income levels. "
+            "Trained using a Gradient Boosting Machine (GBM) on CSO, TII, SEAI & RTB data."
+        ),
+        "avg_monthly_rent": (
+            "Average monthly private rent from RTB (Residential Tenancies Board) data. "
+            "Reflects actual registered tenancy prices, not asking rents. "
+            "Influenced by housing supply, demand pressure, and local income levels."
+        ),
+        "true_cost_index": (
+            "Composite cost-of-living score combining rent, estimated annual energy costs, "
+            "and commute costs (fuel/time). Higher = more expensive overall. "
+            "Formula: (Rent × 12 + Energy Cost + Commute Cost) normalised to 0–100."
+        ),
+        "affordability_score": (
+            "How affordable this area is relative to national benchmarks (0–100, higher is better). "
+            "Key drivers: rent-to-income ratio, BER energy rating, employment rate, "
+            "and rent growth trajectory. Computed by GBM scoring model."
+        ),
+        "livability_score": (
+            "Quality-of-life composite score (0–100, higher is better). "
+            "Factors: employment rate, green space, community services, BER energy efficiency, "
+            "and low congestion. Modelled from CSO census and SEAI energy data."
+        ),
+        "transport_score": (
+            "Transport connectivity score (0–100, higher is better). "
+            "Driven by average congestion delay minutes, proximity to major routes (TII data), "
+            "and commute time estimates. Lower congestion = higher score."
+        ),
+    }
 
     # Filter to selected county's neighbourhoods
     county_eds = ed_scores_df[ed_scores_df["county"] == selected_county].copy()
@@ -591,6 +724,7 @@ def _render_ed_overview_tab(
                 "Risk Score", f"{risk:.0f}/100",
                 f"{label} • {diff:+.0f} vs county avg",
                 "up" if diff > 5 else "stable" if diff > -5 else "down",
+                tooltip=METRIC_TIPS["risk_score"],
             ), unsafe_allow_html=True)
         with col3:
             rent = er.get("avg_monthly_rent", 0)
@@ -600,6 +734,7 @@ def _render_ed_overview_tab(
                 "Monthly Rent", f"€{rent:,.0f}",
                 f"{pct_diff:+.0f}% vs county avg",
                 "up" if pct_diff > 10 else "stable" if pct_diff > -10 else "down",
+                tooltip=METRIC_TIPS["avg_monthly_rent"],
             ), unsafe_allow_html=True)
         with col4:
             true_cost = er.get("true_cost_index", 0)
@@ -607,6 +742,7 @@ def _render_ed_overview_tab(
                 "True Cost Index", f"{true_cost:.0f}",
                 "Composite score",
                 "stable",
+                tooltip=METRIC_TIPS["true_cost_index"],
             ), unsafe_allow_html=True)
         with col5:
             afford = er.get("affordability_score", 50)
@@ -614,12 +750,24 @@ def _render_ed_overview_tab(
                 "Affordability", f"{afford:.0f}/100",
                 get_affordability_label(afford),
                 "down" if afford > 66 else "stable" if afford > 33 else "up",
+                tooltip=METRIC_TIPS["affordability_score"],
             ), unsafe_allow_html=True)
 
     st.markdown("---")
 
-    _ed_metric_label = {"risk_score":"🔴 Risk Score","livability_score":"🟢 Livability Score","transport_score":"🔵 Transport Score","affordability_score":"💰 Affordability Score"}.get(selected_metric, selected_metric)
-    st.markdown(f'<div class="section-header">📍 {selected_county} — {_ed_metric_label}</div>', unsafe_allow_html=True)
+    _ed_metric_labels = {
+        "risk_score": "🔴 Risk Score",
+        "livability_score": "🟢 Livability Score",
+        "transport_score": "🔵 Transport Score",
+        "affordability_score": "💰 Affordability Score",
+    }
+    _ed_metric_label = _ed_metric_labels.get(selected_metric, selected_metric)
+    tip_text = METRIC_TIPS.get(selected_metric, "")
+    tip_icon = info_tooltip(tip_text) if tip_text else ""
+    st.markdown(
+        f'<div class="map-metric-header section-header">📍 {selected_county} — {_ed_metric_label}{tip_icon}</div>',
+        unsafe_allow_html=True,
+    )
     render_map(county_eds, selected_metric, level="ed", county=selected_county)
 
     # ── Neighbourhood Detail (collapsible) ───────────────────
