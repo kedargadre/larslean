@@ -116,10 +116,14 @@ def topsis_rank(
     available_cols = [c for c in criteria.keys() if c in df.columns]
     D = df[available_cols].fillna(0).values.astype(float)
 
-    # ── 4. Normalize the decision matrix (vector normalization) ─
-    norms = np.sqrt((D ** 2).sum(axis=0))
-    norms[norms == 0] = 1  # prevent division by zero
-    R = D / norms
+    # ── 4. Normalize the decision matrix (Min-Max normalization) ─
+    # Vector normalization compresses low-variance clusters. Min-Max spreads 
+    # them across [0,1], ensuring user weightings actually affect the ranking.
+    D_min = D.min(axis=0)
+    D_max = D.max(axis=0)
+    diffs = D_max - D_min
+    diffs[diffs == 0] = 1  # prevent division by zero
+    R = (D - D_min) / diffs
 
     # ── 5. Apply weights ────────────────────────────────────────
     W = np.array([weights.get(c, 0.05) for c in available_cols])
