@@ -253,24 +253,82 @@ def _generate_response(query, area_context, page_context):
 
 
 def _get_preferences_context():
-    """Pull user preferences from session state (set in overview tab)."""
+    """Pull user preferences + top matches from session state."""
     parts = []
-    for prefix in ["ov_c", "ov_e"]:
-        budget = st.session_state.get(f"{prefix}_budget")
+
+    # ── User profile (set via 'Tell Us About You' sidebar) ────
+    prefs = st.session_state.get("_advisor_prefs")
+    if not prefs:
+        # Fallback: read directly from Streamlit widget keys
+        budget = st.session_state.get("pref_budget")
         if budget:
-            fam = st.session_state.get(f"{prefix}_fam", 1)
-            work = st.session_state.get(f"{prefix}_work", "remote")
-            comm = st.session_state.get(f"{prefix}_comm", "medium")
-            wa = st.session_state.get(f"{prefix}_wa", 0.3)
-            wl = st.session_state.get(f"{prefix}_wl", 0.25)
-            ws = st.session_state.get(f"{prefix}_ws", 0.2)
-            wt = st.session_state.get(f"{prefix}_wt", 0.15)
-            parts.append(
-                f"\n--- USER PREFERENCES (from dashboard) ---\n"
-                f"Monthly budget: €{budget} | Household: {fam} | Work: {work} | Commute tolerance: {comm}\n"
-                f"Priority weights — Affordability: {wa}, Livability: {wl}, Low Risk: {ws}, Transport: {wt}"
+            prefs = {
+                "budget": budget,
+                "family_size": st.session_state.get("pref_fam", 1),
+                "work_mode": st.session_state.get("pref_work", "remote"),
+                "commute": st.session_state.get("pref_comm", "medium"),
+                "w_afford": st.session_state.get("pref_wa", 0.3),
+                "w_live": st.session_state.get("pref_wl", 0.25),
+                "w_safe": st.session_state.get("pref_ws", 0.2),
+                "w_trans": st.session_state.get("pref_wt", 0.15),
+            }
+
+    if prefs:
+        work_labels = {"remote": "🏠 Remote", "hybrid": "🔄 Hybrid", "office": "🏢 Office"}
+        comm_labels = {"low": "Low (prefers nearby)", "medium": "Medium", "high": "High (flexible)"}
+        fam_labels = {1: "Single", 2: "Couple", 3: "Small Family", 4: "Family", 5: "Large Family"}
+        parts.append(
+            f"\n--- USER PROFILE (from 'Tell Us About You') ---\n"
+            f"Monthly take-home budget: €{prefs['budget']:,}\n"
+            f"Household: {fam_labels.get(prefs['family_size'], prefs['family_size'])} ({prefs['family_size']} person(s))\n"
+            f"Work mode: {work_labels.get(prefs['work_mode'], prefs['work_mode'])}\n"
+            f"Commute tolerance: {comm_labels.get(prefs['commute'], prefs['commute'])}\n"
+            f"Priority weights set by user:\n"
+            f"  - Affordability: {prefs['w_afford']:.0%}\n"
+            f"  - Livability:    {prefs['w_live']:.0%}\n"
+            f"  - Low Risk:      {prefs['w_safe']:.0%}\n"
+            f"  - Transport:     {prefs['w_trans']:.0%}"
+        )
+
+    # ── Top match results (from last TOPSIS run) ──────────────
+    matches = st.session_state.get("_advisor_top_matches")
+    if matches:
+        scope = matches.get("scope", "Ireland")
+        level = matches.get("level", "county")
+        top3 = matches.get("top3", [])
+        medals = ["🥇", "🥈", "🥉"]
+        match_lines = [
+            f"\n--- LAST MATCH RESULTS (TOPSIS ranking across {scope}) ---",
+            f"These are the top 3 best-fit {level}s for the user's profile:",
+        ]
+        for i, m in enumerate(top3):
+            medal = medals[i] if i < len(medals) else f"#{i+1}"
+            remaining = m.get('monthly_remaining', 0)
+            remaining_str = f"+€{remaining:,.0f} surplus" if remaining >= 0 else f"€{abs(remaining):,.0f} over budget"
+            match_lines.append(
+                f"  {medal} {m['name']}: Match Score {m['match_score']}/100 | "
+                f"Rent €{m['rent']:,.0f}/mo | {remaining_str} | "
+                f"Budget Fit: {m['budget_fit']} | "
+                f"Risk: {m['risk_score']} | Livability: {m['livability_score']}"
             )
-            break
+        match_lines.append(
+            "IMPORTANT: When the user asks about their matches or recommendations, "
+            "reference these specific results. Do NOT say you lack access to match data."
+        )
+        parts.append("\n".join(match_lines))
+
+    # ── Current map/area selection ────────────────────────────
+    county = st.session_state.get("_advisor_county")
+    zoom = st.session_state.get("zoom_level", "🇮🇪 Ireland")
+    ed_name = st.session_state.get("ed_select", "")
+    if county:
+        parts.append(
+            f"\n--- CURRENT DASHBOARD SELECTION ---\n"
+            f"Zoom level: {zoom}\n"
+            f"Selected county: {county}"
+            + (f"\nSelected neighbourhood: {ed_name.split(' (')[0]}" if ed_name else "")
+        )
+
     return "\n".join(parts)
 
 
